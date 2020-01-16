@@ -20,12 +20,11 @@ class DaoProduits {
 			$requete = $pdo->prepare("SELECT * FROM ".self::TABLE_NAME ." WHERE `id_produit` = :id");
 			$requete->bindParam(':id', $id);	
 			$requete->execute();
-			$resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
+			$resultats = $requete->fetch(PDO::FETCH_ASSOC);
 			return $resultats;
 		}
 		return null;	 
 	}
-	
 	
 	 public static function findAll() {		
 		if ($pdo = self::connect()) {
@@ -36,5 +35,50 @@ class DaoProduits {
 		}
 		return null;
 	 }
+
+	 public static function add($user) {		
+		if ($pdo = self::connect()) {
+			$sql = "INSERT INTO ". self::TABLE_NAME  
+					."(libelle, prix_unitaire, reference)" 
+					."VALUES (:libelle, :prix_unitaire, :reference)";
+
+
+			$stmt= $pdo->prepare($sql);
+			$stmt->execute($user);
+			$idUser=$pdo->lastInsertId();
+			return self::find($idUser);
+		}
+		return null;	 
+	}
+
+	public static function update($user) {			
+		$params = array();
+		$clauseWhere = "";
+		
+		foreach ($user as $attr => $val ){
+			if ($attr == "id_produit") $clauseWhere = "id_produit = $val";						
+			else {
+				$valeur = (is_numeric($val))?$val:"'$val'";
+				$params[] = "$attr = $valeur";
+			}
+		}	
+		$clauseUpdate = implode(", ", $params);
+		if (($pdo = self::connect()) && !empty($clauseUpdate) && !empty($clauseWhere)) {
+			$sql = "UPDATE ". self::TABLE_NAME  
+					." SET $clauseUpdate WHERE $clauseWhere" ;
+
+ 			$x =$pdo->exec($sql);
+			return self::find($user["id_produit"]);
+		}
+		return null;	 
+	}
+
+	public static function delete($id) {		
+		if (($pdo = self::connect()) && !empty($id)) {
+			$sql = "DELETE FROM ".self::TABLE_NAME ." WHERE `id_produit` = $idUser";
+			return $pdo->exec($sql);  // returns 0 or 1
+		}
+		return false;
+	}
 
 }

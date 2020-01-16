@@ -31,10 +31,35 @@ $app->get('/silexProject/produits', function () use ($app) {
 });
 
 
-$app->get('/produit/{id}', function ($id){
-    $resultat = DaoProduits::find($id);
-    return toJson($resultat);
+$app->get('/silexProject/produits/{id}', function ($id) use ($app){
+    $resultat = DaoProduits::findAll();
+    $resultat2 = DaoProduits::find($id);
+    return $app['twig']->render('produit.html.twig', array(
+        'produit' => $resultat2,
+        'produits' => $resultat
+    ));
 });
 
+$app->put('/silexProject/produits/', function (Request $request) use ($app) {
+    if( 0 === strpos($request->headers->get('Content-Type'),'application/json')){
+        $data = json_decode($request->getContent(),true);
+        $request->request->replace(is_array($data)? $data : array());
+        $newUser = DaoProduits::update($data);
+        $resultat = DaoProduits::findAll();
+        return $app['twig']->render('produits.html.twig', array(
+        'produits' => $resultat
+    ));
+    }
+});
+
+$app->post('/users', function (Request $request){
+
+    if( 0 === strpos($request->headers->get('Content-Type'),'application/json')){
+        $data = json_decode($request->getContent(),true);
+        $request->request->replace(is_array($data)? $data : array());
+        $newUser = DaoUser::add($data);
+        return toJson($newUser,201);
+    }
+});
 
 $app->run();

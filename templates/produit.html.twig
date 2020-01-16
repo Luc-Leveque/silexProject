@@ -1,64 +1,56 @@
+{% extends 'layout.html.twig' %}
+
 {% block javascripts %} 
    <script language = "javascript" 
       src = "https://code.jquery.com/jquery-2.2.4.min.js"></script> 
    
-   <script language = "javascript">  
+  <script language = "javascript"> 
     $(document).ready(function(){   
 
-        $('#modifier').on('click', function (e) {
-  
-                $.ajax({  
-                    url:        url,  
-                    type:       'put', 
-                     data : {
-                        "libelle"       :  $('#libelle').val(),
-                        "reference"     :  $('#reference').val(),
-                        "prix_unitaire" :  $('#prix_unitaire').val(),
-                    } 
-                )}   
-                .done(function(data, status) {
-                    $.ajax({  
-                        url:        url,  
-                        type:       'get',   
-                    )}   
-                    .done(function(data, status) {
-                        $('body').html(data);
-                    }  
-                }  
-                },  
-            }  
-        }); 
+        $('#update').on('click', function (e) {
 
-        $('#modifier').on('click', function (e) {
+            var url = $(this).attr('data-url');
+            var id  = $(this).attr('data-id');
   
             $.ajax({  
                 url:        url,  
-                type:       'post', 
-                    data : {
+                type:       'put', 
+                dataType: "json", 
+                contentType: "application/json",
+                data : JSON.stringify({
+                    "id_produit"    :  id,
                     "libelle"       :  $('#libelle').val(),
                     "reference"     :  $('#reference').val(),
-                    "prix_unitaire" :  $('#prix_unitaire').val(),
-                } 
-            )}   
+                    "prix_unitaire" :  $('#prix_unitaire').val()
+                })
+            })    
             .done(function(data, status) {
-                $.ajax({  
-                    url:        url,  
-                    type:       'get',   
-                )}   
-                .done(function(data, status) {
-                    $('body').html(data);
-                }  
-                }  
-            },  
-            }  
+                console.log(data);
+                $('body').html(data);
+            }); 
+
+        });
+
+        $('.mod').on('click', function (e) {
+
+            var url = $(this).attr('data-url');
+            var type = $(this).attr('data-type');
+            var html = $(this).attr('data-html');
+
+            $.ajax({  
+            url:        url,  
+            type:       'get',
+            })   
+            .done(function(data, status) {
+                $('body').html(data);
+            }); 
         }); 
+    });
+</script> 
+{% endblock %} 
 
-        }
-    });  
-   </script> 
-{% endblock %}  
+{% block produit %}
 
-<produit>
     {% if produit %}
         <div class="form-row">
             <div class="form-group col-md-4">
@@ -78,7 +70,7 @@
                 <input type="text" class="form-control" name="reference" id="reference" value="{{ produit.reference }}" >
             </div>
         </div>
-        <input id="update" type="button" data-url="/produit/{{ produit.id_produit }}"  data-type="put" class="btn btn-sm btn-success" value="Modifier">
+        <input id="update" type="button" data-url="/silexProject/produits/" data-id="{{ produit.id_produit }}" data-type="put" class="btn btn-sm btn-success" value="Modifier">
     {% else %}
         <div class="form-row">
             <div class="form-group col-md-4">
@@ -98,7 +90,41 @@
                 <input type="text" class="form-control" name="reference" id="reference" value="" >
             </div>
         </div>
-        <input id="update" type="button" data-url="/produit/{{ produit.id_produit }}"  data-type="get" class="btn btn-sm btn-success" value="Modifier">
+        <input id="create" type="button" data-url="/produit/{{ produit.id_produit }}"  data-type="get" class="btn btn-sm btn-success" value="Modifier">
     {% endif %}
-</produit>   
-<% } %>
+
+{% endblock %} 
+
+{% block content %}
+
+  {% if produits %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+            <th>Id Produit</th>
+            <th>Libelle Produit</th>
+            <th>Prix Unitaire</th>
+            <th>Reference</th>
+            <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%  for produit in produits %}
+          <tr>
+            <td><a class="modifier" href="#">{{ produit.id_produit }}</a></td>
+            <td><a class="modifier" href="#">{{ produit.libelle }}</a></td>
+            <td>{{ produit.prix_unitaire }}</td>
+            <td><a class="modifier" href="#">{{ produit.reference }}</a></td>
+            <td>
+                <input class="mod"  type="button" data-url="/silexProject/produits/{{ produit.id_produit }}"  class="btn btn-sm btn-success" value="Modifier">
+                <input type="button" data-url="/client/<%= client.id_client %>"  data-html="" data-type="delete" class="btn btn-sm btn-danger" value="Delete">
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Articles yok</p>
+  {% endif %}
+
+{% endblock %}
