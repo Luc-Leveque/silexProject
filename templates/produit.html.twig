@@ -1,0 +1,104 @@
+{% block javascripts %} 
+   <script language = "javascript" 
+      src = "https://code.jquery.com/jquery-2.2.4.min.js"></script> 
+   
+   <script language = "javascript">  
+    $(document).ready(function(){   
+
+        $('#modifier').on('click', function (e) {
+  
+                $.ajax({  
+                    url:        url,  
+                    type:       'put', 
+                     data : {
+                        "libelle"       :  $('#libelle').val(),
+                        "reference"     :  $('#reference').val(),
+                        "prix_unitaire" :  $('#prix_unitaire').val(),
+                    } 
+                )}   
+                .done(function(data, status) {
+                    $.ajax({  
+                        url:        url,  
+                        type:       'get',   
+                    )}   
+                    .done(function(data, status) {
+                        $('body').html(data);
+                    }  
+                }  
+                },  
+            }  
+        }); 
+
+        $('#modifier').on('click', function (e) {
+  
+            $.ajax({  
+                url:        url,  
+                type:       'post', 
+                    data : {
+                    "libelle"       :  $('#libelle').val(),
+                    "reference"     :  $('#reference').val(),
+                    "prix_unitaire" :  $('#prix_unitaire').val(),
+                } 
+            )}   
+            .done(function(data, status) {
+                $.ajax({  
+                    url:        url,  
+                    type:       'get',   
+                )}   
+                .done(function(data, status) {
+                    $('body').html(data);
+                }  
+                }  
+            },  
+            }  
+        }); 
+
+        }
+    });  
+   </script> 
+{% endblock %}  
+
+<produit>
+    {% if produit %}
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="libelle">libelle</label>
+                <input type="text" class="form-control" name="libelle" id="libelle" value="{{ produit.libelle }}" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="prix_unitaire">prix_unitaire</label>
+                <input type="text" class="form-control" name="prix_unitaire" id="prix_unitaire" value="{{ produit.prix_unitaire }}" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="reference">reference</label>
+                <input type="text" class="form-control" name="reference" id="reference" value="{{ produit.reference }}" >
+            </div>
+        </div>
+        <input id="update" type="button" data-url="/produit/{{ produit.id_produit }}"  data-type="put" class="btn btn-sm btn-success" value="Modifier">
+    {% else %}
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="libelle">libelle</label>
+                <input type="text" class="form-control" name="libelle" id="libelle" value="" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="prix_unitaire">prix_unitaire</label>
+                <input type="text" class="form-control" name="prix_unitaire" id="prix_unitaire" value="" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="reference">reference</label>
+                <input type="text" class="form-control" name="reference" id="reference" value="" >
+            </div>
+        </div>
+        <input id="update" type="button" data-url="/produit/{{ produit.id_produit }}"  data-type="get" class="btn btn-sm btn-success" value="Modifier">
+    {% endif %}
+</produit>   
+<% } %>

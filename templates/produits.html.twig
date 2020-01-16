@@ -6,7 +6,7 @@
    
    <script language = "javascript">  
     $(document).ready(function(){   
-        $(':button').on('click', function (e) {
+        $('.modifier').on('click', function (e) {
             var url = $(this).attr('data-url');
             var type = $(this).attr('data-type');
             var html = $(this).attr('data-html');
@@ -16,7 +16,7 @@
                     type:       'get',   
                 )}   
                 .done(function(data, status) {
-                     $('body').html(data);
+                     $('produit').html(data);
                 }  
                 },  
 }  
@@ -45,12 +45,12 @@
       <tbody>
         {%  for produit in produits %}
           <tr>
-            <td><a href="#">{{ produit.id_produit }}</a></td>
-            <td><a href="#">{{ produit.libelle }}</a></td>
+            <td><a class="modifier" href="#">{{ produit.id_produit }}</a></td>
+            <td><a class="modifier" href="#">{{ produit.libelle }}</a></td>
             <td>{{ produit.prix_unitaire }}</td>
-            <td><a href="#">{{ produit.reference }}</a></td>
+            <td><a class="modifier" href="#">{{ produit.reference }}</a></td>
             <td>
-                <input type="button" data-url="/client/<%= client.id_client %>"  data-html="client" data-type="get" class="btn btn-sm btn-success" value="Modifier">
+                <input class="modifier" type="button" data-url="/client/{{ produit.id_produit }}"  data-html="client" data-type="get" class="btn btn-sm btn-success" value="Modifier">
                 <input type="button" data-url="/client/<%= client.id_client %>"  data-html="" data-type="delete" class="btn btn-sm btn-danger" value="Delete">
             </td>
           </tr>

@@ -22,6 +22,7 @@ function toJson($resultat, $httpCode=200) {
     return $app->json($retour, $httpCode);
 }
 
+
 $app->get('/silexProject/produits', function () use ($app) {
     $resultat = DaoProduits::findAll();
     return $app['twig']->render('produits.html.twig', array(
@@ -31,18 +32,9 @@ $app->get('/silexProject/produits', function () use ($app) {
 
 
 $app->get('/produit/{id}', function ($id){
-    $resultat = DaoUser::find($id);
+    $resultat = DaoProduits::find($id);
     return toJson($resultat);
 });
 
-$app->post('/users', function (Request $request){
-
-    if( 0 === strpos($request->headers->get('Content-Type'),'application/json')){
-        $data = json_decode($request->getContent(),true);
-        $request->request->replace(is_array($data)? $data : array());
-        $newUser = DaoUser::add($data);
-        return toJson($newUser,201);
-    }
-});
 
 $app->run();
