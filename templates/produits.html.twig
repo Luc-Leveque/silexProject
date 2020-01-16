@@ -1,0 +1,64 @@
+{% extends 'layout.html.twig' %}
+
+{% block javascripts %} 
+   <script language = "javascript" 
+      src = "https://code.jquery.com/jquery-2.2.4.min.js"></script> 
+   
+   <script language = "javascript">  
+    $(document).ready(function(){   
+        $(':button').on('click', function (e) {
+            var url = $(this).attr('data-url');
+            var type = $(this).attr('data-type');
+            var html = $(this).attr('data-html');
+  
+                $.ajax({  
+                    url:        url,  
+                    type:       'get',   
+                )}   
+                .done(function(data, status) {
+                     $('body').html(data);
+                }  
+                },  
+}  
+
+            }); 
+        }
+    });  
+   </script> 
+{% endblock %}  
+
+{% block title%} Users {% endblock %}
+
+{% block content %}
+
+  {% if produits %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+            <th>Id Produit</th>
+            <th>Libelle Produit</th>
+            <th>Prix Unitaire</th>
+            <th>Reference</th>
+            <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%  for produit in produits %}
+          <tr>
+            <td><a href="#">{{ produit.id_produit }}</a></td>
+            <td><a href="#">{{ produit.libelle }}</a></td>
+            <td>{{ produit.prix_unitaire }}</td>
+            <td><a href="#">{{ produit.reference }}</a></td>
+            <td>
+                <input type="button" data-url="/client/<%= client.id_client %>"  data-html="client" data-type="get" class="btn btn-sm btn-success" value="Modifier">
+                <input type="button" data-url="/client/<%= client.id_client %>"  data-html="" data-type="delete" class="btn btn-sm btn-danger" value="Delete">
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Articles yok</p>
+  {% endif %}
+
+{% endblock %}
