@@ -75,7 +75,7 @@ class DaoProduits {
 
 	public static function delete($id) {		
 		if (($pdo = self::connect()) && !empty($id)) {
-			$sql = "DELETE FROM ".self::TABLE_NAME ." WHERE `id_produit` = $idUser";
+			$sql = "DELETE FROM ".self::TABLE_NAME ." WHERE `id_produit` = $id";
 			return $pdo->exec($sql);  // returns 0 or 1
 		}
 		return false;

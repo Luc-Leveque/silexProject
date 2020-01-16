@@ -25,11 +25,73 @@
                 })
             })    
             .done(function(data, status) {
-                console.log(data);
-                $('body').html(data);
+                $.ajax({  
+                    url:  '/silexProject/produits/',  
+                    type: 'get',
+                })   
+                .done(function(data, status) {
+                    $('body').html(data);
+                }); 
+            }); 
+        });
+
+        $('#create').on('click', function (e) {
+
+            var url = $(this).attr('data-url');
+            var id  = $(this).attr('data-id');
+  
+            $.ajax({  
+                url:        url,  
+                type:       'post', 
+                dataType: "json", 
+                contentType: "application/json",
+                data : JSON.stringify({
+                    "id_produit"    :  id,
+                    "libelle"       :  $('#libelle').val(),
+                    "reference"     :  $('#reference').val(),
+                    "prix_unitaire" :  $('#prix_unitaire').val()
+                })
+            })    
+            .done(function(data, status) {
+                $.ajax({  
+                    url:  '/silexProject/produits/',  
+                    type: 'get',
+                })   
+                .done(function(data, status) {
+                    $('body').html(data);
+                }); 
             }); 
 
         });
+
+         $('#post').on('click', function (e) {
+            $.ajax({  
+                url:         '/silexProject/produits/new/',  
+                type:       'get',
+            })   
+            .done(function(data, status) {
+                $('body').html(data);
+            }); 
+        }); 
+
+         $('.delete').on('click', function (e) {
+
+            var url = $(this).attr('data-url');
+
+            $.ajax({  
+                url:        url,  
+                type:       'delete',
+            })   
+            .done(function(data, status) {
+                $.ajax({  
+                    url:  '/silexProject/produits/',  
+                    type: 'get',
+                })   
+                .done(function(data, status) {
+                    $('body').html(data);
+                }); 
+            }); 
+        }); 
 
         $('.mod').on('click', function (e) {
 
@@ -90,12 +152,14 @@
                 <input type="text" class="form-control" name="reference" id="reference" value="" >
             </div>
         </div>
-        <input id="create" type="button" data-url="/produit/{{ produit.id_produit }}"  data-type="get" class="btn btn-sm btn-success" value="Modifier">
+        <input id="create" type="button" data-url="/silexProject/produits/"  data-type="post" class="btn btn-sm btn-success" value="Ajouter">
     {% endif %}
 
 {% endblock %} 
 
 {% block content %}
+
+<input id="post" type="button"  value="Ajouter un produit">
 
   {% if produits %}
     <table class="table table-striped">
@@ -111,13 +175,13 @@
       <tbody>
         {%  for produit in produits %}
           <tr>
-            <td><a class="modifier" href="#">{{ produit.id_produit }}</a></td>
-            <td><a class="modifier" href="#">{{ produit.libelle }}</a></td>
+            <td><a class="modifier" data-url="/silexProject/produits/{{ produit.id_produit }}" href="#">{{ produit.id_produit }}</a></td>
+            <td><a class="modifier" data-url="/silexProject/produits/{{ produit.id_produit }}" href="#">{{ produit.libelle }}</a></td>
             <td>{{ produit.prix_unitaire }}</td>
-            <td><a class="modifier" href="#">{{ produit.reference }}</a></td>
+            <td><a class="modifier" data-url="/silexProject/produits/{{ produit.id_produit }}" href="#">{{ produit.reference }}</a></td>
             <td>
                 <input class="mod"  type="button" data-url="/silexProject/produits/{{ produit.id_produit }}"  class="btn btn-sm btn-success" value="Modifier">
-                <input type="button" data-url="/client/<%= client.id_client %>"  data-html="" data-type="delete" class="btn btn-sm btn-danger" value="Delete">
+                <input class="delete" type="button" data-url="/silexProject/produits/{{ produit.id_produit }}"  class="btn btn-sm btn-danger" value="Delete">
             </td>
           </tr>
         {% endfor %}
