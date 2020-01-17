@@ -72,6 +72,10 @@
             .done(function(data, status) {
                 $('body').html(data);
             }); 
+        });
+
+        $('#annuler').on('click', function (e) {
+            $('form').hide();
         }); 
 
          $('.delete').on('click', function (e) {
@@ -112,7 +116,7 @@
 {% endblock %} 
 
 {% block produit %}
-
+<form>
     {% if produit %}
         <div class="form-row">
             <div class="form-group col-md-4">
@@ -133,6 +137,7 @@
             </div>
         </div>
         <input id="update" type="button" data-url="/silexProject/produits/" data-id="{{ produit.id_produit }}" data-type="put" class="btn btn-sm btn-success" value="Modifier">
+        <input id="annuler" type="button"  value="Annuler">
     {% else %}
         <div class="form-row">
             <div class="form-group col-md-4">
@@ -153,8 +158,9 @@
             </div>
         </div>
         <input id="create" type="button" data-url="/silexProject/produits/"  data-type="post" class="btn btn-sm btn-success" value="Ajouter">
+        <input id="annuler" type="button"  value="Annuler">
     {% endif %}
-
+<form>
 {% endblock %} 
 
 {% block content %}
